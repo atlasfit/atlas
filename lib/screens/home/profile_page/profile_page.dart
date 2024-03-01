@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:atlas/services/database.dart'; // Import your DatabaseService
 import 'following_page.dart';
 import 'followers_page.dart';
-import 'display_workouts_page.dart';
+import 'workout_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // Widget to build the count button
   Widget _buildCountButton(String label, Future<List<dynamic>> countFuture) {
+    // get user Id
+    final userId = Provider.of<AtlasUser?>(context)?.uid ?? '';
     return FutureBuilder<List<dynamic>>(
       future: countFuture,
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -41,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                      // pass the list input to display on the corresponding page
                       builder: (context) =>
                           FollowersPage(followers: countFuture)),
                 );
@@ -48,8 +51,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                      // pass the list input to display on the corresponding page
                       builder: (context) =>
                           FollowingPage(following: countFuture)),
+                );
+              } else if (label == 'Workouts') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      // pass the list input to display on the corresponding page
+                      builder: (context) => WorkoutPage(workouts: countFuture)),
                 );
                 // Navigate to the following page
               }
@@ -137,11 +148,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
               children: [
                 _buildCountButton(
-                    'Workouts', DatabaseService().getWorkoutIDsByUser(userId)),
+                    'Workouts', DatabaseService().getWorkoutsByUser(userId)),
                 _buildCountButton(
-                    'Followers', DatabaseService().getFollowersCount(userId)),
+                    'Followers', DatabaseService().getFollowers(userId)),
                 _buildCountButton(
-                    'Following', DatabaseService().getFollowingCount(userId)),
+                    'Following', DatabaseService().getFollowing(userId)),
               ],
             ),
             //add space between divider and above
@@ -151,15 +162,6 @@ class _ProfilePageState extends State<ProfilePage> {
               thickness: 2,
             ),
             const SizedBox(height: 15.0),
-            ...List.generate(
-              2, // Dynamically change this for each user depending on the number of workouts they've posted
-              (index) => const Card(
-                child: ListTile(
-                  title: Text(
-                      "Recent Workout Card"), // Placeholder until you decide how each card should look
-                ),
-              ),
-            ),
           ]),
         ],
       ),
