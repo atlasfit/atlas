@@ -1,7 +1,7 @@
 import 'package:atlas/screens/home/activity_dashboard.dart';
 import 'package:atlas/screens/home/profile_page/profile_page.dart';
 import 'package:atlas/screens/home/search_page.dart';
-import 'package:atlas/screens/home/workout_page.dart';
+import 'package:atlas/screens/home/workout_page/workout_page.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
