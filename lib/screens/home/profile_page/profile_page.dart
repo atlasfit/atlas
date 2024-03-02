@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'settings_page.dart';
 import 'package:atlas/models/user.dart';
-import 'package:atlas/models/workout.dart';
 import 'package:provider/provider.dart';
 import 'package:atlas/services/database.dart'; // Import your DatabaseService
 import 'following_page.dart';
@@ -18,14 +17,12 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // Widget to build the count button
   Widget _buildCountButton(String label, Future<List<dynamic>> countFuture) {
-    // get user Id
-    final userId = Provider.of<AtlasUser?>(context)?.uid ?? '';
     return FutureBuilder<List<dynamic>>(
       future: countFuture,
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the Future to complete
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           // Handle any errors that occur during fetching the data
           return Text('Error: ${snapshot.error}');
@@ -67,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: Column(
               children: [
-                Text('$count', style: TextStyle(fontSize: 20)),
+                Text('$count', style: const TextStyle(fontSize: 20)),
                 Text(label),
               ],
             ),

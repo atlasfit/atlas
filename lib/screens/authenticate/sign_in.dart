@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/services/auth.dart';
-import 'package:atlas/screens/authenticate/register.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
-  SignIn({required this.toggleView});
+  const SignIn({super.key, required this.toggleView});
 
   @override
-  _SignInState createState() => _SignInState();
+  State<SignIn> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
@@ -24,20 +23,16 @@ class _SignInState extends State<SignIn> {
     try {
       var result = await _auth.signInWithEmailAndPassword(email, password);
       if (result != null) {
-        print(result.uid);
-        print('Sign in successful.');
       } else {
         setState(() {
           _errorMessage =
               'User or Password not recognized'; // Update the error message
         });
-        print('Sign in failed! Received null user');
       }
     } catch (e) {
       setState(() {
         _errorMessage = 'Sign in failed. '; // Update the error message
       });
-      print('Sign in failed with error: $e');
     }
   }
 
@@ -45,11 +40,11 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ATLAS'),
+        title: const Text('ATLAS'),
         centerTitle: true,
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

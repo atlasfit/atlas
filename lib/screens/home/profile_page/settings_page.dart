@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/services/auth.dart'; // Ensure this import is correct and AuthService class has a signOut method
-import 'package:atlas/services/database.dart'; // Import your DatabaseService
-
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/services/auth.dart';
-import 'package:atlas/shared/constants.dart'; // Ensure this file exists and contains your textInputDecoration
-import 'package:atlas/shared/loading.dart'; // Ensure this file exists and provides a loading widget
+import 'package:atlas/shared/loading.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
 
-  Register({required this.toggleView});
+  const Register({super.key, required this.toggleView});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
@@ -25,10 +24,10 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return _loading
-        ? Loading()
+        ? const Loading()
         : Scaffold(
             appBar: AppBar(
-              title: Text('ATLAS'),
+              title: const Text('ATLAS'),
               centerTitle: true,
             ),
             body: Container(

@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:atlas/models/exercise.dart'; // Ensure this path is correct
 
 class ExerciseSelectionPage extends StatefulWidget {
+  const ExerciseSelectionPage({super.key});
+
   @override
-  _ExerciseSelectionPageState createState() => _ExerciseSelectionPageState();
+  State<ExerciseSelectionPage> createState() => _ExerciseSelectionPageState();
 }
 
 class _ExerciseSelectionPageState extends State<ExerciseSelectionPage> {
@@ -36,7 +38,7 @@ class _ExerciseSelectionPageState extends State<ExerciseSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Exercise'),
+        title: const Text('Select Exercise'),
       ),
       body: ListView.builder(
         itemCount: exercises.length,

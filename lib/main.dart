@@ -4,12 +4,9 @@ import 'package:json_theme/json_theme.dart';
 import 'package:firebase_core/firebase_core.dart'; // Add this line
 import 'package:flutter/services.dart'; // For rootBundle
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
-import 'package:atlas/services/database.dart';
 import 'package:atlas/models/user.dart';
 import 'package:atlas/services/auth.dart';
-import 'package:uuid/uuid.dart';
 
 import 'dart:convert'; //
 
@@ -39,7 +36,7 @@ class MainApp extends StatelessWidget {
     return StreamProvider<AtlasUser?>.value(
       value: AuthService().atlasUser,
       initialData: null,
-      child: MaterialApp(home: Wrapper(), theme: theme),
+      child: MaterialApp(home: const Wrapper(), theme: theme),
     );
   }
 }

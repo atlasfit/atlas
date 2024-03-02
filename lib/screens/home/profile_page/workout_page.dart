@@ -4,10 +4,10 @@ import 'package:atlas/models/workout.dart'; // Import your Workout model
 class WorkoutPage extends StatefulWidget {
   final Future<List<dynamic>> workouts; // Change the type to List<Workout>
 
-  const WorkoutPage({Key? key, required this.workouts}) : super(key: key);
+  const WorkoutPage({super.key, required this.workouts});
 
   @override
-  _WorkoutPageState createState() => _WorkoutPageState();
+  State<WorkoutPage> createState() => _WorkoutPageState();
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {

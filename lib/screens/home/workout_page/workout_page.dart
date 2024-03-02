@@ -14,7 +14,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Page'),
+        title: const Text('Workout Page'),
       ),
       body: Center(
         child: ElevatedButton.icon(
@@ -23,11 +23,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      WorkoutBuilder()), // Ensure the class name is correct
+                      const WorkoutBuilder()), // Ensure the class name is correct
             );
           },
-          icon: Icon(Icons.add), // "+" Icon
-          label: Text('Create Workout'), // Button text
+          icon: const Icon(Icons.add), // "+" Icon
+          label: const Text('Create Workout'), // Button text
         ),
       ),
     );

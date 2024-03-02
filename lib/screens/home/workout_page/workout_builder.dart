@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // If you're using Firestore
 import 'package:atlas/models/exercise.dart'; // Ensure this path is correct
 import 'package:atlas/screens/home/workout_page/exercise_selection_page.dart'; // Verify the path
 import 'package:atlas/services/database.dart'; // Verify the path
@@ -8,10 +7,10 @@ import 'package:atlas/models/workout.dart';
 import 'package:provider/provider.dart';
 
 class WorkoutBuilder extends StatefulWidget {
-  const WorkoutBuilder({Key? key}) : super(key: key);
+  const WorkoutBuilder({super.key});
 
   @override
-  _WorkoutBuilderState createState() => _WorkoutBuilderState();
+  State<WorkoutBuilder> createState() => _WorkoutBuilderState();
 }
 
 class _WorkoutBuilderState extends State<WorkoutBuilder> {
@@ -26,11 +25,11 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Builder'),
+        title: const Text('Workout Builder'),
         centerTitle: true, // Center the title text
         actions: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(
+            margin: const EdgeInsets.symmetric(
                 vertical:
                     8), // Adjusts the button's vertical positioning and size
             decoration: BoxDecoration(
@@ -44,58 +43,60 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                 if (atlasUser != null) {
                   // Ensure there is a logged-in user
                   Workout newWorkout = Workout(
-                    createdBy:
-                        atlasUser.uid, // Use the user ID from the Provider
+                    // Use the user ID from the Provider
+                    createdBy: atlasUser.uid,
                     workoutName: workoutName,
                     description: workoutDescription,
                     exercises: selectedExercises,
                   );
 
-                  await DatabaseService().saveWorkout(newWorkout,
-                      userId); // Call the saveWorkout method with the new Workout object
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Workout Saved!')));
-                  Navigator.pop(
-                      context); // Optionally navigate back or reset the form
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Workout Saved!')));
+
+                  // Optionally navigate back or reset the form
+                  Navigator.pop(context);
+
+                  // Call the saveWorkout method with the new Workout object
+                  await DatabaseService().saveWorkout(newWorkout, userId);
                 } else {
                   // Handle the case where there is no logged-in user
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('No user logged in.')));
+                      const SnackBar(content: Text('No user logged in.')));
                 }
               },
-              child: Text('Save', style: TextStyle(color: Colors.white)),
               style: TextButton.styleFrom(
                 backgroundColor: Colors
                     .transparent, // Makes the TextButton's background transparent
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 16), // Horizontal padding within the button
               ),
+              child: const Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Workout Name',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) => workoutName = value,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Workout Description',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) => workoutDescription = value,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ...selectedExercises.asMap().entries.map((entry) {
                 int idx = entry.key;
                 Exercise exercise = entry.value;
@@ -106,11 +107,11 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                   onEdit: () => _showEditExerciseDialog(exercise, idx),
                   index: idx, // Pass the index to ExerciseTile
                 );
-              }).toList(),
+              }),
               Center(
                 child: ElevatedButton(
                   onPressed: () => _navigateAndDisplaySelection(context),
-                  child: Text('Add Exercise'),
+                  child: const Text('Add Exercise'),
                 ),
               ),
             ],
@@ -123,7 +124,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
   Future<void> _navigateAndDisplaySelection(BuildContext context) async {
     final Exercise? selectedExercise = await Navigator.push<Exercise>(
       context,
-      MaterialPageRoute(builder: (context) => ExerciseSelectionPage()),
+      MaterialPageRoute(builder: (context) => const ExerciseSelectionPage()),
     );
 
     if (selectedExercise != null) {
@@ -147,31 +148,32 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               children: <Widget>[
                 TextField(
                   controller: setsController,
-                  decoration: InputDecoration(labelText: 'Sets'),
+                  decoration: const InputDecoration(labelText: 'Sets'),
                   keyboardType: TextInputType.text,
                 ),
                 TextField(
                   controller: repsController,
-                  decoration: InputDecoration(labelText: 'Reps'),
+                  decoration: const InputDecoration(labelText: 'Reps'),
                   keyboardType: TextInputType.text,
                 ),
                 TextField(
                   controller: weightController,
-                  decoration: InputDecoration(labelText: 'Weight (lbs)'),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(labelText: 'Weight (lbs)'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                 ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 setState(() {
                   selectedExercises.add(Exercise(
@@ -209,31 +211,32 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               children: <Widget>[
                 TextField(
                   controller: setsController,
-                  decoration: InputDecoration(labelText: 'Sets'),
+                  decoration: const InputDecoration(labelText: 'Sets'),
                   keyboardType: TextInputType.text,
                 ),
                 TextField(
                   controller: repsController,
-                  decoration: InputDecoration(labelText: 'Reps'),
+                  decoration: const InputDecoration(labelText: 'Reps'),
                   keyboardType: TextInputType.text,
                 ),
                 TextField(
                   controller: weightController,
-                  decoration: InputDecoration(labelText: 'Weight (lbs)'),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(labelText: 'Weight (lbs)'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                 ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Save'),
+              child: const Text('Save'),
               onPressed: () {
                 setState(() {
                   selectedExercises[index] = Exercise(
@@ -260,30 +263,30 @@ class ExerciseTile extends StatelessWidget {
   final int index;
 
   const ExerciseTile({
-    Key? key,
+    super.key,
     required this.exercise,
     required this.onDelete,
     required this.onEdit,
     required this.index,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Text('${index + 1}) ',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                     child: Text(exercise.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold))),
               ],
             ),
@@ -293,10 +296,10 @@ class ExerciseTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                    icon: Icon(Icons.edit, color: Colors.blue),
+                    icon: const Icon(Icons.edit, color: Colors.blue),
                     onPressed: onEdit),
                 IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: onDelete),
               ],
             ),
