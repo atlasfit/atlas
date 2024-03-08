@@ -23,12 +23,13 @@ class _WorkoutPageState extends State<WorkoutPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /*
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const WorkoutFlow(),
+                    builder: (context) => const WorkoutFlow(new Workout()),
                   ),
                 );
               },
@@ -36,6 +37,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               label: const Text('Start Workout'),
             ),
             const SizedBox(height: 16),
+            */
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(

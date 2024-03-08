@@ -24,7 +24,6 @@ class _SettingsPageState extends State<SettingsPage> {
           mainAxisAlignment: MainAxisAlignment
               .center, // Center the column in the middle of the screen
           children: [
-            const Text('Settings Page'),
             const SizedBox(height: 20), // Add some spacing before the button
             TextButton.icon(
               icon: const Icon(Icons.logout), // Use the logout icon

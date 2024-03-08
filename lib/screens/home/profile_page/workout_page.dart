@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/models/workout.dart'; // Import your Workout model
+import 'package:atlas/screens/home/profile_page/detailed_workout_page.dart'; // Import the DetailedWorkoutPage
 
 class WorkoutPage extends StatefulWidget {
   final Future<List<Workout>> workouts; // Change the type to List<Workout>
@@ -31,6 +32,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
               List<Workout> workouts = (snapshot.data ?? []);
+
               return ListView.builder(
                   itemCount: workouts.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -38,6 +40,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         child: ListTile(
                       title: Text(workouts[index].workoutName),
                       subtitle: Text(workouts[index].description),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetailedWorkoutPage(workout: workouts[index]),
+                          ),
+                        );
+                      },
                     ));
                   });
             } else {

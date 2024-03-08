@@ -208,11 +208,34 @@ class DatabaseService {
   /* function that takes in a workout object and a userid of the user that finished the workout and saves the workout to the database */
   Future<void> saveCompletedWorkout(
       Workout workout, String completedUserId) async {
-    /* Add the workout to the workouts collection */
-    firestore.collection("completedWorkouts").doc(completedUserId).update({
-      'workoutIDs': FieldValue.arrayUnion([workout.workoutID]),
-      'timestamps': FieldValue.arrayUnion([Timestamp.now()])
-    });
+    DocumentReference docRef =
+        firestore.collection("completedWorkouts").doc(completedUserId);
+
+    // Get the current document
+    DocumentSnapshot docSnapshot = await docRef.get();
+
+    // Check if the document exists
+    if (docSnapshot.exists) {
+      // Extract the current workoutIDs and timestamps lists
+      List<dynamic> workoutIDs = List.from(docSnapshot['workoutIDs'] ?? []);
+      List<dynamic> timestamps = List.from(docSnapshot['timestamps'] ?? []);
+
+      // Append the new workoutID and timestamp
+      workoutIDs.add(workout.workoutID);
+      timestamps.add(Timestamp.now());
+
+      // Update the document with the new lists
+      await docRef.update({
+        'workoutIDs': workoutIDs,
+        'timestamps': timestamps,
+      });
+    } else {
+      // If the document doesn't exist, create it with the initial data
+      await docRef.set({
+        'workoutIDs': [workout.workoutID],
+        'timestamps': [Timestamp.now()],
+      });
+    }
   }
 
   /* FOLLOWING FUNCTIONS */

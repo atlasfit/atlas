@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Center(child: _children[_currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 22, 22, 22),
         onTap: onTabTapped,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
