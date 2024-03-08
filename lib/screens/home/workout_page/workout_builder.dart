@@ -17,11 +17,11 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
   String workoutName = '';
   String workoutDescription = '';
   List<Exercise> selectedExercises = [];
+  final db = DatabaseService();
 
   @override
   Widget build(BuildContext context) {
     final atlasUser = Provider.of<AtlasUser?>(context);
-    final userId = atlasUser?.uid ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -41,13 +41,16 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
             child: TextButton(
               onPressed: () async {
                 if (atlasUser != null) {
-                  // Ensure there is a logged-in user
+                  /* create new workout ID */
+                  String workoutID = DatabaseService().createDocID("workouts");
+
+                  /* create a new workout object */
                   Workout newWorkout = Workout(
-                    // Use the user ID from the Provider
-                    createdBy: atlasUser.uid,
+                    createdBy: atlasUser,
                     workoutName: workoutName,
                     description: workoutDescription,
                     exercises: selectedExercises,
+                    workoutID: workoutID,
                   );
 
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +60,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                   Navigator.pop(context);
 
                   // Call the saveWorkout method with the new Workout object
-                  await DatabaseService().saveWorkout(newWorkout, userId);
+                  await DatabaseService().saveCreatedWorkout(newWorkout);
                 } else {
                   // Handle the case where there is no logged-in user
                   ScaffoldMessenger.of(context).showSnackBar(

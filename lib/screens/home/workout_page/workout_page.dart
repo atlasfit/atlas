@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/screens/home/workout_page/workout_builder.dart'; // Ensure this import path is correct
-import 'package:atlas/screens/home/workout_page/timer.dart';
 import 'package:atlas/screens/home/workout_page/workout_flow.dart';
 
 // Workout Page
@@ -29,7 +28,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WorkoutFlow(),
+                    builder: (context) => const WorkoutFlow(),
                   ),
                 );
               },

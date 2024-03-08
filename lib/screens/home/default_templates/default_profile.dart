@@ -11,31 +11,14 @@ import 'package:atlas/models/workout.dart';
 class DefaultProfile extends StatefulWidget {
   final String otherUserId;
 
-  const DefaultProfile({Key? key, required this.otherUserId}) : super(key: key);
+  const DefaultProfile({super.key, required this.otherUserId});
 
   @override
   State<DefaultProfile> createState() => _DefaultProfileState();
 }
 
 class _DefaultProfileState extends State<DefaultProfile> {
-  Future<Map<String, dynamic>> userDataFuture =
-      Future.value({}); // Initialize with an empty map
   bool? isUserFollowing;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUserData().then((_) {
-      checkFollowingStatus();
-    });
-  }
-
-  Future<void> fetchUserData() async {
-    setState(() {
-      userDataFuture = DatabaseService().getUserData(widget.otherUserId);
-      return;
-    });
-  }
 
   Future<bool?> checkFollowingStatus() async {
     final atlasUser = Provider.of<AtlasUser?>(context, listen: false);
@@ -143,9 +126,9 @@ class _DefaultProfileState extends State<DefaultProfile> {
         if (snapshot.connectionState == ConnectionState.waiting ||
             !snapshot.hasData) {
           // Show a loading indicator or a disabled button while waiting for data
-          return ElevatedButton(
+          return const ElevatedButton(
             onPressed: null, // Disable the button
-            child: const Text('Loading...'),
+            child: Text('Loading...'),
           );
         }
 
@@ -191,8 +174,8 @@ class _DefaultProfileState extends State<DefaultProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: userDataFuture,
+    return FutureBuilder<AtlasUser>(
+      future: DatabaseService().getAtlasUser(widget.otherUserId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -243,13 +226,13 @@ class _DefaultProfileState extends State<DefaultProfile> {
                       children: [
                         const SizedBox(height: 15.0),
                         Text(
-                          '${userData['firstName'] ?? "First"} ${userData['lastName'] ?? "Last"}',
+                          '${userData.firstName} ${userData.lastName}',
                           style: const TextStyle(
                               fontSize: 25.0, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          '@${userData['username'] ?? "username"}',
+                          '@${userData.username}',
                           style: const TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.bold),
                         ),

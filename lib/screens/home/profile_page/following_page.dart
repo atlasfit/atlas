@@ -6,20 +6,25 @@ import 'package:atlas/models/user.dart';
 class FollowingPage extends StatefulWidget {
   final Future<List<String>> following; // Assuming this is a list of user IDs
 
-  const FollowingPage({Key? key, required this.following}) : super(key: key);
+  const FollowingPage({super.key, required this.following});
 
   @override
   State<FollowingPage> createState() => _FollowingPageState();
 }
 
 class _FollowingPageState extends State<FollowingPage> {
+  // function to get following users
   Future<List<AtlasUser>> _getFollowingUsers() async {
+    // wait on following user IDs to be passed and saved to userIds
     List<String> userIds = await widget.following;
-    List<AtlasUser> users = [];
-    for (String userId in userIds) {
-      var user = await DatabaseService().getAtlasUser(userId);
-      users.add(user);
-    }
+
+    // get AtlasUser objects for each user ID concurrently
+    List<Future<AtlasUser>> futures = userIds
+        .map((userId) => DatabaseService().getAtlasUser(userId))
+        .toList();
+
+    // wait for all futures to complete and return the list of AtlasUser objects
+    List<AtlasUser> users = await Future.wait(futures);
     return users;
   }
 

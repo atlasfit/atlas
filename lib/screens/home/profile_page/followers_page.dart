@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:atlas/services/database.dart';
 import 'profile_wrapper.dart';
 import 'package:atlas/models/user.dart';
@@ -7,7 +6,7 @@ import 'package:atlas/models/user.dart';
 class FollowersPage extends StatefulWidget {
   final Future<List<String>> followers;
 
-  const FollowersPage({Key? key, required this.followers}) : super(key: key);
+  const FollowersPage({super.key, required this.followers});
 
   @override
   State<FollowersPage> createState() => _FollowersPageState();

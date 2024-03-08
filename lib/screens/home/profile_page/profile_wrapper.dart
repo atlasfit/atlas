@@ -7,17 +7,15 @@ import 'package:atlas/screens/home/default_templates/default_profile.dart'; // I
 class ProfileWrapper extends StatelessWidget {
   final String userID;
 
-  const ProfileWrapper({Key? key, required this.userID}) : super(key: key);
+  const ProfileWrapper({super.key, required this.userID});
 
   @override
   Widget build(BuildContext context) {
     final atlasUser = Provider.of<AtlasUser?>(context);
     final userIdCurrUser = atlasUser?.uid ?? '';
-    print('Current user ID: $userIdCurrUser');
-    print('Other user ID: $userID');
     // Check if the provided userID matches the current user's ID
     if (userID == userIdCurrUser) {
-      return ProfilePage(); // Navigate to the ProfilePage if IDs match
+      return const ProfilePage(); // Navigate to the ProfilePage if IDs match
     } else {
       return DefaultProfile(
           otherUserId:

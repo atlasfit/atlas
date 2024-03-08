@@ -1,7 +1,5 @@
 import 'package:atlas/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:atlas/screens/home/default_templates/default_profile.dart';
 import 'package:atlas/screens/home/profile_page/profile_wrapper.dart';
 import 'package:atlas/services/database.dart';
 

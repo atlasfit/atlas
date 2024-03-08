@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:atlas/models/workout.dart';
 import 'package:atlas/models/exercise.dart';
 import 'package:atlas/screens/home/workout_page/timer.dart';
 
 class WorkoutFlow extends StatefulWidget {
+  const WorkoutFlow({super.key});
+
   @override
-  _WorkoutFlowState createState() => _WorkoutFlowState();
+  State<WorkoutFlow> createState() => _WorkoutFlowState();
 }
 
 class _WorkoutFlowState extends State<WorkoutFlow> {
@@ -22,7 +23,7 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Flow'),
+        title: const Text('Workout Flow'),
       ),
       body: Column(
         children: [
@@ -37,7 +38,7 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               exercises[currentIndex].name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
@@ -51,13 +52,16 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
               },
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
                   child: Card(
                     elevation: 4, // Add elevation for a defined border
                     color: Colors.blueGrey[800], // Set a darker color
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0), // Add rounded corners
-                      side: BorderSide(color: Colors.black, width: 1), // Add a border
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Add rounded corners
+                      side: const BorderSide(
+                          color: Colors.black, width: 1), // Add a border
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -66,11 +70,11 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
                         children: [
                           Text(
                             'Sets: ${exercises[currentIndex].sets}',
-                            style: TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 18),
                           ),
                           Text(
                             'Reps: ${exercises[currentIndex].reps}',
-                            style: TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 18),
                           ),
                         ],
                       ),
@@ -80,12 +84,14 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
               },
             ),
           ),
-          SizedBox(height: 16), // Add space between the Card and TimerWidget
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TimerWidget(), // Replace the empty space with the TimerWidget
+          const SizedBox(
+              height: 16), // Add space between the Card and TimerWidget
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child:
+                TimerWidget(), // Replace the empty space with the TimerWidget
           ),
-          SizedBox(height: 16), // Add space below the TimerWidget
+          const SizedBox(height: 16), // Add space below the TimerWidget
         ],
       ),
     );
