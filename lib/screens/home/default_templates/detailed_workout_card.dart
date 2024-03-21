@@ -5,8 +5,7 @@ import 'package:atlas/screens/home/workout_page/workout_flow.dart';
 class DetailedWorkoutCard extends StatelessWidget {
   final Workout workout;
 
-  const DetailedWorkoutCard({Key? key, required this.workout})
-      : super(key: key);
+  const DetailedWorkoutCard({super.key, required this.workout});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class DetailedWorkoutCard extends StatelessWidget {
             const SizedBox(height: 16.0),
             ListView.builder(
               physics:
-                  NeverScrollableScrollPhysics(), // to disable ListView's own scrolling
+                  const NeverScrollableScrollPhysics(), // to disable ListView's own scrolling
               shrinkWrap:
                   true, // necessary to make ListView behave inside Column
               itemCount: workout.exercises.length,

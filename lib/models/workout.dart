@@ -2,31 +2,37 @@ import 'package:atlas/models/exercise.dart';
 import 'package:atlas/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/* Represents a workout created by a user. */
 class Workout {
-  AtlasUser createdBy;
-  String workoutID;
-  String workoutName;
-  String description;
-  List<Exercise> exercises;
+  AtlasUser createdBy; // The user who created the workout.
+  String workoutID; // The unique ID of the workout.
+  String workoutName; // The name of the workout.
+  String description; // The description of the workout.
+  List<Exercise> exercises; // The list of exercises in the workout.
 
-  Workout(
-      {required this.createdBy,
-      required this.workoutName,
-      required this.workoutID,
-      this.description = "",
-      required this.exercises});
+  /// Constructs a new instance of the [Workout] class.
+  Workout({
+    required this.createdBy,
+    required this.workoutName,
+    required this.workoutID,
+    this.description = "",
+    required this.exercises,
+  });
 }
 
+/* Represents a completed workout by a user. */
 class CompletedWorkout extends Workout {
-  Timestamp completedTime;
-  AtlasUser completedBy;
+  Timestamp completedTime; // The timestamp when the workout was completed.
+  AtlasUser completedBy; // The user who completed the workout.
 
-  CompletedWorkout(
-      {required super.createdBy,
-      required super.workoutName,
-      super.description = "",
-      required super.exercises,
-      required this.completedTime,
-      required this.completedBy,
-      required super.workoutID});
+  /// Constructs a new instance of the [CompletedWorkout] class.
+  CompletedWorkout({
+    required super.createdBy,
+    required super.workoutName,
+    super.description,
+    required super.exercises,
+    required this.completedTime,
+    required this.completedBy,
+    required super.workoutID,
+  });
 }

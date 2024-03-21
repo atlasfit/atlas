@@ -9,10 +9,10 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final atlasUser =
-        Provider.of<AtlasUser?>(context); //Refers to firebase user
+    /* Refers to firebase user */
+    final atlasUser = Provider.of<AtlasUser?>(context);
 
-    // return either the Home or Authenticate widget
+    /* return either the Home or Authenticate widget based on if there is a logged in user */
     if (atlasUser == null) {
       return const Authenticate();
     } else {

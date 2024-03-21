@@ -2,31 +2,36 @@ import 'package:atlas/models/workout.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class WorkoutCard extends StatelessWidget {
+/* A card widget that displays information about a completed workout. */
+class CompletedWorkoutCard extends StatelessWidget {
   final CompletedWorkout workout;
 
-  const WorkoutCard({
+  /// Constructs a [CompletedWorkoutCard] with the given [workout].
+  const CompletedWorkoutCard({
     super.key,
     required this.workout,
   });
 
   @override
   Widget build(BuildContext context) {
+    /* Calculate the time difference between the current time and the time the workout was completed */
     final DateTime now = DateTime.now();
     final DateTime timestampDate = workout.completedTime.toDate();
     final Duration timeDifference = now.difference(timestampDate);
 
     String formattedTimestamp;
     if (timeDifference.inDays > 1) {
-      formattedTimestamp = DateFormat('h:mm a MMMM d, y').format(timestampDate);
+      formattedTimestamp = DateFormat('h:mm a MMMM d, y')
+          .format(timestampDate); // Format timestamp for more than 1 day ago
     } else if (timeDifference.inDays == 1) {
       formattedTimestamp =
-          'Yesterday at ${DateFormat('h:mm a').format(timestampDate)}';
+          'Yesterday at ${DateFormat('h:mm a').format(timestampDate)}'; // Format timestamp for yesterday
     } else if (timeDifference.inHours >= 1) {
       formattedTimestamp =
-          'Today at ${DateFormat('h:mm a').format(timestampDate)}';
+          'Today at ${DateFormat('h:mm a').format(timestampDate)}'; // Format timestamp for today
     } else {
-      formattedTimestamp = '${timeDifference.inMinutes} minutes ago';
+      formattedTimestamp =
+          '${timeDifference.inMinutes} minutes ago'; // Format timestamp for less than 1 hour ago
     }
 
     return Card(
@@ -60,7 +65,7 @@ class WorkoutCard extends StatelessWidget {
                       children: [
                         Text(
                           '${workout.completedBy.firstName} ${workout.completedBy.lastName}',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         const SizedBox(height: 2),
                       ],
@@ -68,13 +73,13 @@ class WorkoutCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(Icons.task_alt, size: 12),
                         /* Check mark */
-                        const SizedBox(width: 2),
+                        const Icon(Icons.task_alt, size: 12),
                         /* aesthetic space */
+                        const SizedBox(width: 2),
                         Text(
-                          '$formattedTimestamp',
-                          style: TextStyle(fontSize: 12),
+                          formattedTimestamp,
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -85,14 +90,8 @@ class WorkoutCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               workout.workoutName,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
-            /*
-            Text(
-              workout.description,
-              style: TextStyle(fontSize: 16),
-            )
-            */
           ],
         ),
         subtitle: Column(

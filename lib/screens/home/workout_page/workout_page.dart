@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/screens/home/workout_page/workout_builder.dart'; // Ensure this import path is correct
-import 'package:atlas/screens/home/workout_page/workout_flow.dart';
 
 // Workout Page
 class WorkoutPage extends StatefulWidget {

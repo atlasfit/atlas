@@ -1,7 +1,7 @@
 import 'package:atlas/models/user.dart';
 import 'package:atlas/models/workout.dart';
 import 'package:atlas/services/database.dart';
-import 'package:atlas/shared/workout_card.dart';
+import 'package:atlas/screens/home/default_templates/completed_workout_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,7 +62,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
             return ListView.builder(
               itemCount: workouts.length,
               itemBuilder: (BuildContext context, int index) {
-                return WorkoutCard(
+                return CompletedWorkoutCard(
                     workout: workouts[workouts.length - index - 1]);
               },
             );

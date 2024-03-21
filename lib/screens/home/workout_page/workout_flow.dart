@@ -42,7 +42,7 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               widget.workout.description,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

@@ -20,10 +20,9 @@ class DefaultProfile extends StatefulWidget {
 class _DefaultProfileState extends State<DefaultProfile> {
   bool? isUserFollowing;
 
-  Future<bool?> checkFollowingStatus() async {
-    final atlasUser = Provider.of<AtlasUser?>(context, listen: false);
-    final userIdCurrUser = atlasUser?.uid ?? '';
-
+  /* function to check if the current user is following the other user */
+  Future<bool?> checkFollowingStatus(userIdCurrUser) async {
+    /* Check if the current user is following the other user */
     if (userIdCurrUser.isNotEmpty) {
       return await DatabaseService()
           .isFollowing(userIdCurrUser, widget.otherUserId);
@@ -31,42 +30,44 @@ class _DefaultProfileState extends State<DefaultProfile> {
     return null; // Indicates that the check could not be performed
   }
 
+  /* function to return widget of the button for followers and following that has the number of each */
   Widget _buildCountButton(String label, Future<List<String>> users) {
     return FutureBuilder<List<String>>(
-      future: users,
+      future:
+          users, // these are the followers or following of the user depending on which are passed
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while waiting for the Future to complete
+          /* Show a loading indicator while waiting for the Future to complete */
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          // Handle any errors that occur during fetching the data
+          /* Handle any errors that occur during fetching the data */
           return Text('Error: ${snapshot.error}');
         } else {
-          // Once the Future is complete, use the length of the list
+          /* Once the Future is complete, use the length of the list */
           int count = snapshot.data?.length ?? 0;
           return ElevatedButton(
-            //decrease space between buttons
-
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
             ),
             onPressed: () {
+              /* If the button is pressed, navigate to the FollowersPage or FollowingPage */
               if (label == 'Followers') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      // pass the list input to display on the corresponding page
+                      /* pass the list input to display on the corresponding page */
                       builder: (context) => FollowersPage(followers: users)),
                 );
               } else if (label == 'Following') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      // pass the list input to display on the corresponding page
+                      /* pass the list input to display on the corresponding page */
                       builder: (context) => FollowingPage(following: users)),
                 );
               }
             },
+            /* Display the number of followers or following */
             child: Column(
               children: [
                 Text('$count', style: const TextStyle(fontSize: 20)),
@@ -79,34 +80,36 @@ class _DefaultProfileState extends State<DefaultProfile> {
     );
   }
 
+  /* function to return widget of the button for workouts that has the number of workouts */
   Widget _buildWorkoutsButton(Future<List<Workout>> workoutListFuture) {
     return FutureBuilder<List<Workout>>(
       future: workoutListFuture,
       builder: (BuildContext context, AsyncSnapshot<List<Workout>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while waiting for the Future to complete
+          /* Show a loading indicator while waiting for the Future to complete */
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          // Handle any errors that occur during fetching the data
+          /* Handle any errors that occur during fetching the data */
           return Text('Error: ${snapshot.error}');
         } else {
-          // Once the Future is complete, use the length of the list
+          /* Once the Future is complete, use the length of the list */
           int count = snapshot.data?.length ?? 0;
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
             ),
             onPressed: () {
-              // If the button is pressed, navigate to the WorkoutPage
+              /* If the button is pressed, navigate to the WorkoutPage */
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  // Pass the Future directly to the WorkoutPage
+                  /* Pass the Future directly to the WorkoutPage */
                   builder: (context) =>
                       WorkoutPage(workouts: workoutListFuture),
                 ),
               );
             },
+            /* Display the number of workouts */
             child: Column(
               children: [
                 Text('$count', style: const TextStyle(fontSize: 20)),
@@ -119,13 +122,15 @@ class _DefaultProfileState extends State<DefaultProfile> {
     );
   }
 
-  Widget buildFollowingUnfollowingButton() {
+  /* function to return widget of the button for following and unfollowing a user */
+  Widget buildFollowingUnfollowingButton(userIdCurrUser) {
     return FutureBuilder<bool?>(
-      future: checkFollowingStatus(),
+      future: checkFollowingStatus(
+          userIdCurrUser), // Future that checks if the user is following the other user
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             !snapshot.hasData) {
-          // Show a loading indicator or a disabled button while waiting for data
+          /* Show a loading indicator or a disabled button while waiting for data */
           return const ElevatedButton(
             onPressed: null, // Disable the button
             child: Text('Loading...'),
@@ -139,9 +144,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: ElevatedButton(
             onPressed: () async {
-              final atlasUser = Provider.of<AtlasUser?>(context, listen: false);
-              final userIdCurrUser = atlasUser?.uid ?? '';
-
+              /* Follow or unfollow the user based on if the user is already following that person */
               if (isFollowing) {
                 await DatabaseService()
                     .unfollowUser(userIdCurrUser, widget.otherUserId);
@@ -149,7 +152,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
                 await DatabaseService()
                     .followUser(userIdCurrUser, widget.otherUserId);
               }
-              // Force a rebuild to refresh the button state
+              /* Force a rebuild to refresh the button state */
               setState(() {});
             },
             style: ElevatedButton.styleFrom(
@@ -174,15 +177,22 @@ class _DefaultProfileState extends State<DefaultProfile> {
 
   @override
   Widget build(BuildContext context) {
+    /* get atlas user from provider stream */
+    final atlasUser = Provider.of<AtlasUser?>(context, listen: false);
+    final userIdCurrUser = atlasUser?.uid ?? '';
+
     return FutureBuilder<AtlasUser>(
-      future: DatabaseService().getAtlasUser(widget.otherUserId),
+      future: DatabaseService().getAtlasUser(
+          widget.otherUserId), // Future that gets the other users data
       builder: (context, snapshot) {
+        /* Show a loading indicator while waiting for the Future to complete */
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError || !snapshot.hasData) {
           return const Center(child: Text('User not found or error occurred'));
         }
 
+        /* Once the Future is complete, use the data get the user object*/
         final userData = snapshot.data!;
 
         return Scaffold(
@@ -239,7 +249,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
                         const SizedBox(height: 5.0),
                       ],
                     ),
-                    buildFollowingUnfollowingButton(),
+                    buildFollowingUnfollowingButton(userIdCurrUser),
                   ],
                 ),
                 const SizedBox(height: 15.0),

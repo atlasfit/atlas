@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/services/auth.dart';
 
+/* A screen widget for user sign-in. */
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
@@ -10,12 +11,14 @@ class SignIn extends StatefulWidget {
   State<SignIn> createState() => _SignInState();
 }
 
+/* The state class for the SignIn widget. */
 class _SignInState extends State<SignIn> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _auth = AuthService();
   String _errorMessage = '';
 
+  /* Signs in the user with the provided email and password. */
   void _signIn() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
@@ -23,6 +26,7 @@ class _SignInState extends State<SignIn> {
     try {
       var result = await _auth.signInWithEmailAndPassword(email, password);
       if (result != null) {
+        /* if the user is successfully signed in, the atlasuser provider stream will be updated and user will be redirected to home page */
       } else {
         setState(() {
           _errorMessage =
@@ -71,7 +75,8 @@ class _SignInState extends State<SignIn> {
                 prefixIcon: Icon(Icons.lock),
               ),
             ),
-            if (_errorMessage.isNotEmpty)
+            if (_errorMessage
+                .isNotEmpty) // if there is an error with the sign in, display the error message
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Text(
@@ -81,7 +86,8 @@ class _SignInState extends State<SignIn> {
               ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _signIn,
+              onPressed:
+                  _signIn, // when pressed sign in the user with the givne email and password
               child: const Text('Sign In'),
             ),
             const Padding(
@@ -90,7 +96,7 @@ class _SignInState extends State<SignIn> {
             ),
             TextButton(
               onPressed: () {
-                widget.toggleView();
+                widget.toggleView(); // when pressed switch to register view
               },
               child: RichText(
                 text: const TextSpan(
