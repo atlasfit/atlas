@@ -1,8 +1,10 @@
+import 'package:atlas/models/user.dart';
 import 'package:atlas/screens/home/activity_dashboard.dart';
-import 'package:atlas/screens/home/profile_page/profile_page.dart';
+import 'package:atlas/screens/home/profile_page/profile_view.dart';
 import 'package:atlas/screens/home/search_page.dart';
 import 'package:atlas/screens/home/workout_page/workout_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -12,14 +14,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /* create a variable to store the current index of the bottom navigation bar to display proper page corresponding to icon pressed */
   int _currentIndex = 0;
-
-  final List<Widget> _children = const [
-    ActivityDashboard(),
-    SearchPage(),
-    WorkoutPage(),
-    ProfilePage()
-  ];
 
   void onTabTapped(int index) {
     setState(() {
@@ -29,8 +25,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    /* get the current user */
+    final atlasUser = Provider.of<AtlasUser?>(context);
+    final userID = atlasUser?.uid ?? '';
+
+    /* create a list of widgets to display on the home page */
+    final List<Widget> children = [
+      const ActivityDashboard(),
+      const SearchPage(),
+      const WorkoutPage(),
+      ProfileView(userID: userID),
+    ];
+
+    /* return the scaffold with the bottom navigation bar */
     return Scaffold(
-      body: Center(child: _children[_currentIndex]),
+      body: Center(child: children[_currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromARGB(255, 22, 22, 22),
         onTap: onTabTapped,

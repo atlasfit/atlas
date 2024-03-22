@@ -1,9 +1,9 @@
 import 'package:atlas/models/user.dart';
+import 'package:atlas/screens/home/profile_page/profile_view.dart';
 import 'package:flutter/material.dart';
-import 'package:atlas/screens/home/profile_page/profile_wrapper.dart';
 import 'package:atlas/services/database.dart';
 
-// Search Page
+/* This page allows users to search for other users, workouts, and groups */
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -13,29 +13,27 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<AtlasUser> users = [];
-  List<AtlasUser> filteredUsers = [];
+  final DatabaseService _databaseService = DatabaseService();
+  List<AtlasUser> _userSuggestions = [];
   bool showSuggestions = false;
 
-  @override
-  void initState() {
-    super.initState();
-    DatabaseService().getUsers().then((value) {
-      setState(() {
-        users = value;
-        filteredUsers = value;
-      });
-    });
-  }
+  void filterUsers(String query) async {
+    if (query.isNotEmpty) {
+      /* Search for users based on query */
+      List<AtlasUser> users = await _databaseService.searchUsers(query);
 
-  void filterUsers(String query) {
-    setState(() {
-      filteredUsers = users
-          .where((user) =>
-              user.username.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-      showSuggestions = true;
-    });
+      /* Update the user suggestions and show the suggestions */
+      setState(() {
+        _userSuggestions = users;
+        showSuggestions = true;
+      });
+    } else {
+      /* Clear the user suggestions and hide the suggestions */
+      setState(() {
+        _userSuggestions = [];
+        showSuggestions = false;
+      });
+    }
   }
 
   @override
@@ -45,11 +43,9 @@ class _SearchPageState extends State<SearchPage> {
         centerTitle: true,
         title: Text(
           'Find Friends, Workouts, and Groups',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-
-      // contains search bar and filtered user list
       body: Column(
         children: [
           Padding(
@@ -59,11 +55,6 @@ class _SearchPageState extends State<SearchPage> {
               onChanged: (value) {
                 filterUsers(value);
               },
-              onTap: () {
-                setState(() {
-                  showSuggestions = false;
-                });
-              },
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 hintText: 'Search...',
@@ -72,21 +63,24 @@ class _SearchPageState extends State<SearchPage> {
           ),
           if (showSuggestions)
             Expanded(
+              /* Display the user suggestions */
               child: ListView.builder(
-                itemCount: filteredUsers.length,
+                itemCount: _userSuggestions.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                      title: Text(filteredUsers[index].username),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfileWrapper(
-                                userID: filteredUsers[index]
-                                    .uid), //NEED TO FIX THIS!!
+                    title: Text(_userSuggestions[index].username),
+                    onTap: () {
+                      /* Navigate to the profile view of the selected user */
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileView(
+                            userID: _userSuggestions[index].uid,
                           ),
-                        );
-                      });
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),

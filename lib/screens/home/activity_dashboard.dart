@@ -1,7 +1,7 @@
 import 'package:atlas/models/user.dart';
 import 'package:atlas/models/workout.dart';
 import 'package:atlas/services/database.dart';
-import 'package:atlas/screens/home/default_templates/completed_workout_card.dart';
+import 'package:atlas/screens/home/shared_widgets/completed_workout_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,14 +42,15 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    /* get the current user */
     final atlasUser = Provider.of<AtlasUser?>(context);
     final userId = atlasUser?.uid ?? '';
 
-    // Add a button to sign out of firebase
     return Scaffold(
       appBar: AppBar(
         title: const Text('Activity Dashboard'),
       ),
+      /* display a list of completed workouts */
       body: FutureBuilder<List<CompletedWorkout>>(
         future: _getActivityDashboardWorkouts(userId),
         builder: (context, snapshot) {

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:atlas/models/workout.dart'; // Import your Workout model
-import 'package:atlas/screens/home/profile_page/detailed_workout_page.dart'; // Import the DetailedWorkoutPage
+import 'package:atlas/models/workout.dart';
+import 'package:atlas/screens/home/shared_widgets/detailed_workout_page.dart';
 
-class WorkoutPage extends StatefulWidget {
-  final Future<List<Workout>> workouts; // Change the type to List<Workout>
+class CreatedWorkoutsPage extends StatefulWidget {
+  final Future<List<Workout>> workouts;
 
-  const WorkoutPage({super.key, required this.workouts});
+  const CreatedWorkoutsPage({super.key, required this.workouts});
 
   @override
-  State<WorkoutPage> createState() => _WorkoutPageState();
+  State<CreatedWorkoutsPage> createState() => _CreatedWorkoutsPageState();
 }
 
-class _WorkoutPageState extends State<WorkoutPage> {
+class _CreatedWorkoutsPageState extends State<CreatedWorkoutsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

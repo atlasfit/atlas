@@ -3,33 +3,21 @@ import 'package:atlas/services/database.dart'; // Ensure this path is correct fo
 import 'package:atlas/screens/home/profile_page/settings_page.dart';
 import 'package:atlas/screens/home/profile_page/following_page.dart';
 import 'package:atlas/screens/home/profile_page/followers_page.dart';
-import 'package:atlas/screens/home/profile_page/workout_page.dart';
+import 'package:atlas/screens/home/profile_page/created_workouts_page.dart';
 import 'package:provider/provider.dart';
 import 'package:atlas/models/user.dart';
 import 'package:atlas/models/workout.dart';
 
-class DefaultProfile extends StatefulWidget {
-  final String otherUserId;
+class ProfileView extends StatefulWidget {
+  final String userID;
 
-  const DefaultProfile({super.key, required this.otherUserId});
+  const ProfileView({super.key, required this.userID});
 
   @override
-  State<DefaultProfile> createState() => _DefaultProfileState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _DefaultProfileState extends State<DefaultProfile> {
-  bool? isUserFollowing;
-
-  /* function to check if the current user is following the other user */
-  Future<bool?> checkFollowingStatus(userIdCurrUser) async {
-    /* Check if the current user is following the other user */
-    if (userIdCurrUser.isNotEmpty) {
-      return await DatabaseService()
-          .isFollowing(userIdCurrUser, widget.otherUserId);
-    }
-    return null; // Indicates that the check could not be performed
-  }
-
+class _ProfileViewState extends State<ProfileView> {
   /* function to return widget of the button for followers and following that has the number of each */
   Widget _buildCountButton(String label, Future<List<String>> users) {
     return FutureBuilder<List<String>>(
@@ -105,7 +93,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
                 MaterialPageRoute(
                   /* Pass the Future directly to the WorkoutPage */
                   builder: (context) =>
-                      WorkoutPage(workouts: workoutListFuture),
+                      CreatedWorkoutsPage(workouts: workoutListFuture),
                 ),
               );
             },
@@ -124,55 +112,61 @@ class _DefaultProfileState extends State<DefaultProfile> {
 
   /* function to return widget of the button for following and unfollowing a user */
   Widget buildFollowingUnfollowingButton(userIdCurrUser) {
-    return FutureBuilder<bool?>(
-      future: checkFollowingStatus(
-          userIdCurrUser), // Future that checks if the user is following the other user
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            !snapshot.hasData) {
-          /* Show a loading indicator or a disabled button while waiting for data */
-          return const ElevatedButton(
-            onPressed: null, // Disable the button
-            child: Text('Loading...'),
-          );
-        }
+    if (userIdCurrUser != widget.userID) {
+      return FutureBuilder<bool?>(
+        future: DatabaseService().isFollowing(
+            userIdCurrUser,
+            widget
+                .userID), // Future that checks if the user is following the other user
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              !snapshot.hasData) {
+            /* Show a loading indicator or a disabled button while waiting for data */
+            return const ElevatedButton(
+              onPressed: null, // Disable the button
+              child: Text('Loading...'),
+            );
+          }
 
-        final isFollowing =
-            snapshot.data ?? false; // Safely use the snapshot data
+          final isFollowing =
+              snapshot.data ?? false; // Safely use the snapshot data
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: ElevatedButton(
-            onPressed: () async {
-              /* Follow or unfollow the user based on if the user is already following that person */
-              if (isFollowing) {
-                await DatabaseService()
-                    .unfollowUser(userIdCurrUser, widget.otherUserId);
-              } else {
-                await DatabaseService()
-                    .followUser(userIdCurrUser, widget.otherUserId);
-              }
-              /* Force a rebuild to refresh the button state */
-              setState(() {});
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isFollowing
-                  ? const Color.fromARGB(255, 51, 51, 51)
-                  : const Color.fromARGB(255, 20, 111, 185),
-              fixedSize: const Size(100, 30),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                /* Follow or unfollow the user based on if the user is already following that person */
+                if (isFollowing) {
+                  await DatabaseService()
+                      .unfollowUser(userIdCurrUser, widget.userID);
+                } else {
+                  await DatabaseService()
+                      .followUser(userIdCurrUser, widget.userID);
+                }
+                /* Force a rebuild to refresh the button state */
+                setState(() {});
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isFollowing
+                    ? const Color.fromARGB(255, 51, 51, 51)
+                    : const Color.fromARGB(255, 20, 111, 185),
+                fixedSize: const Size(100, 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(8),
               ),
-              padding: const EdgeInsets.all(8),
+              child: Text(
+                isFollowing ? 'Unfollow' : 'Follow',
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-            child: Text(
-              isFollowing ? 'Unfollow' : 'Follow',
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    } else {
+      return Container(); // Return an empty container if the current user is the same as the user ID
+    }
   }
 
   @override
@@ -182,8 +176,8 @@ class _DefaultProfileState extends State<DefaultProfile> {
     final userIdCurrUser = atlasUser?.uid ?? '';
 
     return FutureBuilder<AtlasUser>(
-      future: DatabaseService().getAtlasUser(
-          widget.otherUserId), // Future that gets the other users data
+      future: DatabaseService()
+          .getAtlasUser(widget.userID), // Future that gets the other users data
       builder: (context, snapshot) {
         /* Show a loading indicator while waiting for the Future to complete */
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -193,7 +187,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
         }
 
         /* Once the Future is complete, use the data get the user object*/
-        final userData = snapshot.data!;
+        final AtlasUser userData = snapshot.data!;
 
         return Scaffold(
           appBar: AppBar(
@@ -203,8 +197,9 @@ class _DefaultProfileState extends State<DefaultProfile> {
                 const Spacer(),
                 const SizedBox(width: 40),
                 const Spacer(),
+                /* Add a button to navigate to the settings page */
                 IconButton(
-                  icon: const Icon(Icons.more_horiz),
+                  icon: const Icon(Icons.settings),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -218,6 +213,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
           ),
           body: ListView(
             children: [
+              /* Column containing user image + name + followers/following/workouts */
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(
                   children: [
@@ -249,7 +245,7 @@ class _DefaultProfileState extends State<DefaultProfile> {
                         const SizedBox(height: 5.0),
                       ],
                     ),
-                    buildFollowingUnfollowingButton(userIdCurrUser),
+                    buildFollowingUnfollowingButton(userIdCurrUser)
                   ],
                 ),
                 const SizedBox(height: 15.0),
@@ -257,11 +253,11 @@ class _DefaultProfileState extends State<DefaultProfile> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildWorkoutsButton(DatabaseService()
-                        .getCreatedWorkoutsByUser(widget.otherUserId)),
+                        .getCreatedWorkoutsByUser(widget.userID)),
                     _buildCountButton('Followers',
-                        DatabaseService().getFollowerIDs(widget.otherUserId)),
+                        DatabaseService().getFollowerIDs(widget.userID)),
                     _buildCountButton('Following',
-                        DatabaseService().getFollowingIDs(widget.otherUserId)),
+                        DatabaseService().getFollowingIDs(widget.userID)),
                   ],
                 ),
                 const SizedBox(height: 15.0),

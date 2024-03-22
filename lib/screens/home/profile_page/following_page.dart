@@ -1,6 +1,6 @@
+import 'package:atlas/screens/home/profile_page/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:atlas/services/database.dart';
-import 'profile_wrapper.dart';
 import 'package:atlas/models/user.dart';
 
 class FollowingPage extends StatefulWidget {
@@ -57,7 +57,7 @@ class _FollowingPageState extends State<FollowingPage> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfileWrapper(userID: user.uid),
+                        builder: (context) => ProfileView(userID: user.uid),
                       ),
                     ),
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:atlas/models/workout.dart'; // Import your Workout model
-import 'package:atlas/screens/home/default_templates/detailed_workout_card.dart'; // Import the DetailedWorkoutCard
+import 'package:atlas/screens/home/shared_widgets/detailed_workout_card.dart'; // Import the DetailedWorkoutCard
 
 class DetailedWorkoutPage extends StatelessWidget {
   final Workout workout;

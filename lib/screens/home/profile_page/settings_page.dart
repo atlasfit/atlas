@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:atlas/services/auth.dart'; // Ensure this import is correct and AuthService class has a signOut method
+import 'package:atlas/services/auth.dart';
 
+/// A page that displays the settings for the user's profile.
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -29,10 +30,11 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: const Icon(Icons.logout), // Use the logout icon
               label: const Text('Log Out'),
               onPressed: () async {
-                // Add sign out functionality
-                // Call signOut method from AuthService
+                /* Sign out the user and pop the settings page */
                 AuthService().signOut();
-                Navigator.pop(context);
+
+                /* Pop all routes until reaching the root route so user is returned to sign in page when signing out */
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
           ],
@@ -41,14 +43,3 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
-/*
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('Sign Out'),
-            onPressed: () async {
-              // Add sign out functionality
-              //Call signOut method from AuthService
-              AuthService().signOut();
-            },
-          ), */

@@ -372,4 +372,23 @@ class DatabaseService {
     /* if the document does not exist, or the user does not follow the other */
     return false;
   }
+
+  /* SEARCH FUNCTIONS */
+  Future<List<AtlasUser>> searchUsers(String query) async {
+    var querySnapshot = await firestore
+        .collection('users')
+        .where('username', isGreaterThanOrEqualTo: query)
+        .where('username', isLessThan: '${query}z')
+        .get();
+    List<AtlasUser> users = querySnapshot.docs.map((doc) {
+      return AtlasUser(
+        uid: doc.id,
+        email: doc.data()['email'] ?? '',
+        firstName: doc.data()['firstName'] ?? '',
+        lastName: doc.data()['lastName'] ?? '',
+        username: doc.data()['username'] ?? '',
+      );
+    }).toList();
+    return users;
+  }
 }
