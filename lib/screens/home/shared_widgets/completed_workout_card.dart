@@ -20,6 +20,29 @@ class CompletedWorkoutCard extends StatelessWidget {
     final Duration timeDifference = now.difference(timestampDate);
 
     String formattedTimestamp;
+    if (timestampDate.year != now.year ||
+        timestampDate.month != now.month ||
+        timestampDate.day != now.day) {
+      // If the post is not from today
+      if (timestampDate.year == now.year &&
+          timestampDate.month == now.month &&
+          timestampDate.day == now.day - 1) {
+        formattedTimestamp =
+            'Yesterday at ${DateFormat('h:mm a').format(timestampDate)}'; // Format timestamp for yesterday
+      } else {
+        formattedTimestamp = DateFormat('h:mm a MMMM d, y')
+            .format(timestampDate); // Format timestamp for more than 1 day ago
+      }
+    } else if (timeDifference.inHours >= 1) {
+      formattedTimestamp =
+          'Today at ${DateFormat('h:mm a').format(timestampDate)}'; // Format timestamp for today
+    } else {
+      formattedTimestamp =
+          '${timeDifference.inMinutes} minutes ago'; // Format timestamp for less than 1 hour ago
+    }
+
+    /*
+    String formattedTimestamp;
     if (timeDifference.inDays > 1) {
       formattedTimestamp = DateFormat('h:mm a MMMM d, y')
           .format(timestampDate); // Format timestamp for more than 1 day ago
@@ -33,6 +56,7 @@ class CompletedWorkoutCard extends StatelessWidget {
       formattedTimestamp =
           '${timeDifference.inMinutes} minutes ago'; // Format timestamp for less than 1 hour ago
     }
+    */
 
     return Card(
       child: ListTile(
