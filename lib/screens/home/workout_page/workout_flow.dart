@@ -6,6 +6,7 @@ import 'package:atlas/models/workout.dart';
 import 'package:atlas/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:atlas/screens/home/home_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 class WorkoutFlow extends StatefulWidget {
   final Workout workout;
@@ -19,11 +20,22 @@ class WorkoutFlow extends StatefulWidget {
 class _WorkoutFlowState extends State<WorkoutFlow> {
   late List<Exercise> exercises;
   int currentIndex = 0;
+  XFile? image;
 
   @override
   void initState() {
     super.initState();
     exercises = widget.workout.exercises;
+  }
+
+  void uploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        image = pickedFile;
+      });
+    }
   }
 
   @override
@@ -81,12 +93,37 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
                                 fontSize: 24, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
+                          const SizedBox(height: 20),
+                          image == null ? ElevatedButton(
+                            onPressed: () {
+                              uploadImage();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            child: const Text('Upload Photo'),
+                          )
+                          : ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                image = null; // Remove the image
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            child: const Text('Remove Photo'),
+                          ),
                           const SizedBox(
                               height: 20), // Space between text and button
                           ElevatedButton(
                             onPressed: () {
                               DatabaseService()
-                                  .saveCompletedWorkout(widget.workout, userId);
+                                  .saveCompletedWorkout(widget.workout, userId, image);
                               //navigate to the profile page
                               //Clear the navigator stack
                               Navigator.pushAndRemoveUntil(

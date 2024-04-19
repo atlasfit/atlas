@@ -136,6 +136,17 @@ class CompletedWorkoutCard extends StatelessWidget {
               workout.description,
             ),
             const SizedBox(height: 8),
+            if (workout.photoURL.isNotEmpty) // Check if photo URL exists
+      Container(
+        width: double.infinity, // Match the width of the card
+        height: 150, // Set your desired height
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(workout.photoURL),
+            fit: BoxFit.contain, // Adjust the image inside the container
+          ),
+        ),
+      ),
             //Text(
             //  'Created by: ${workout.createdBy.firstName} ${workout.createdBy.lastName}',
             //),

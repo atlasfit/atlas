@@ -24,6 +24,7 @@ class Workout {
 class CompletedWorkout extends Workout {
   Timestamp completedTime; // The timestamp when the workout was completed.
   AtlasUser completedBy; // The user who completed the workout.
+  String photoURL; // The URL of the photo of the completed workout.
 
   /// Constructs a new instance of the [CompletedWorkout] class.
   CompletedWorkout({
@@ -33,6 +34,7 @@ class CompletedWorkout extends Workout {
     required super.exercises,
     required this.completedTime,
     required this.completedBy,
+    required this.photoURL,
     required super.workoutID,
   });
 }

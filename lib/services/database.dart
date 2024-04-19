@@ -148,10 +148,12 @@ class DatabaseService {
     if (doc.exists) {
       List workoutIDs = doc.data()?['workoutIDs'] ?? [];
       List timestamps = doc.data()?['timestamps'] ?? [];
+      List photoURLs = doc.data()?['photoURLs'] ?? [];
 
       for (int i = 0; i < workoutIDs.length; i++) {
         /* get the workoutID */
         String workoutID = workoutIDs[i];
+        String photoURL = photoURLs[i];
 
         /* get timestamp of workout completion */
         Timestamp timestamp = timestamps[i];
@@ -170,6 +172,7 @@ class DatabaseService {
           exercises: workout.exercises,
           completedTime: timestamp,
           completedBy: completedUser,
+          photoURL: photoURL,
           workoutID: workoutID,
         ));
       }
@@ -253,33 +256,49 @@ class DatabaseService {
 
   /* function that takes in a workout object and a userid of the user that finished the workout and saves the workout to the database */
   Future<void> saveCompletedWorkout(
-      Workout workout, String completedUserId) async {
+      Workout workout, String completedUserId, XFile? image) async {
     DocumentReference docRef =
         firestore.collection("completedWorkouts").doc(completedUserId);
 
     // Get the current document
     DocumentSnapshot docSnapshot = await docRef.get();
 
+    String photoURL = '';
+    if (image != null) {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('postpictures') // specify the folder name
+          .child(completedUserId)
+          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      await ref.putFile(File(image.path));
+      photoURL = await ref.getDownloadURL();
+    }
+
     // Check if the document exists
     if (docSnapshot.exists) {
       // Extract the current workoutIDs and timestamps lists
       List<dynamic> workoutIDs = List.from(docSnapshot['workoutIDs'] ?? []);
       List<dynamic> timestamps = List.from(docSnapshot['timestamps'] ?? []);
+      List<dynamic> photoURLs = List.from(docSnapshot['photoURLs'] ?? []);
 
       // Append the new workoutID and timestamp
       workoutIDs.add(workout.workoutID);
       timestamps.add(Timestamp.now());
+      photoURLs.add(photoURL);
 
       // Update the document with the new lists
       await docRef.update({
         'workoutIDs': workoutIDs,
         'timestamps': timestamps,
+        "photoURLs": photoURLs,
       });
     } else {
       // If the document doesn't exist, create it with the initial data
       await docRef.set({
         'workoutIDs': [workout.workoutID],
         'timestamps': [Timestamp.now()],
+        "photoURLs": [photoURL],
       });
     }
   }
