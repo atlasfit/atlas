@@ -570,6 +570,7 @@ class DatabaseService {
       var userCompletedWorkoutsDoc = await userDocRef.get();
       List workoutIDs = userCompletedWorkoutsDoc.get('workoutIDs');
       List photoURLs = userCompletedWorkoutsDoc.get('photoURLs');
+      List timestamps = userCompletedWorkoutsDoc.get('timestamps');
 
       // Find the index of the workoutId in the array field
       int index = workoutIDs.indexOf(workoutId);
@@ -579,11 +580,13 @@ class DatabaseService {
         // Remove the workoutId from the array fields
         workoutIDs.removeAt(index);
         photoURLs.removeAt(index);
+        timestamps.removeAt(index);
 
         // Update the document with the modified arrays
         await userDocRef.update({
           'workoutIDs': workoutIDs,
           'photoURLs': photoURLs,
+          'timestamps': timestamps,
         });
 
         return true;
