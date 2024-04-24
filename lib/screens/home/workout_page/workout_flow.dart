@@ -7,6 +7,7 @@ import 'package:atlas/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:atlas/screens/home/home_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class WorkoutFlow extends StatefulWidget {
   final Workout workout;
@@ -29,6 +30,16 @@ class _WorkoutFlowState extends State<WorkoutFlow> {
   }
 
 Future<void> getImage(ImageSource source) async {
+  // Ensure access to the camera.
+  if (source == ImageSource.camera && !(await Permission.camera.request().isGranted)) {
+    return;
+  }
+
+  // Ensure access to the photo library.
+  if (source == ImageSource.gallery && !(await Permission.photos.request().isGranted)) {
+    return;
+  }
+
   final picker = ImagePicker();
   final pickedFile = await picker.pickImage(source: source);
   if (pickedFile != null) {

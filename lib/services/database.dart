@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 class DatabaseService {
   /* Firestore initialization */
@@ -533,6 +534,11 @@ class DatabaseService {
   }
 
   Future<void> pickAndUploadImage(String userId, String storageBucket) async {
+    // Ensure access to photo library.
+    if (!(await Permission.photos.request().isGranted)) {
+      return;
+    }
+
     final ImagePicker picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
