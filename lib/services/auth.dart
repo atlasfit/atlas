@@ -124,4 +124,15 @@ class AuthService {
       return null;
     }
   }
+
+  /* Send a request to reset the passowrd for a given email. */
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return true; // Password reset email sent successfully
+    } catch (e) {
+      print('Error sending password reset email: $e');
+      return false; // Failed to send password reset email
+    }
+  }
 }
