@@ -19,18 +19,6 @@ class _AuthenticateState extends State<Authenticate> {
 
     //don't know where to put this method.
     /* Registers a new user with the provided email and password. */
-  Future<User?> registerWithEmailAndPassword(String email, String password) async {
-    try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      User? user = result.user;
-      return user;
-    } catch (e) {
-      print('Error registering user: $e');
-      return null;
-    }
-  }
-
   Future<bool> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
