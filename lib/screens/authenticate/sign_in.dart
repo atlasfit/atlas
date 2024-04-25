@@ -47,10 +47,10 @@ class _SignInState extends State<SignIn> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Forgot Password'),
+          title: const Text('Forgot Password'),
           content: TextField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter your email',
             ),
           ),
@@ -59,7 +59,7 @@ class _SignInState extends State<SignIn> {
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -70,7 +70,7 @@ class _SignInState extends State<SignIn> {
                   if (result) {
                     // Show success message
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content:
                             Text('Password reset email sent successfully!'),
                       ),
@@ -78,7 +78,7 @@ class _SignInState extends State<SignIn> {
                   } else {
                     // Show error message
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text(
                             'Failed to send password reset email.'),
                       ),
@@ -87,7 +87,7 @@ class _SignInState extends State<SignIn> {
                   Navigator.pop(context); // Close the dialog
                 }
               },
-              child: Text('Reset Password'),
+              child: const Text('Reset Password'),
             ),
           ],
         );
@@ -203,7 +203,7 @@ class _SignInState extends State<SignIn> {
               onPressed: () {
                 _showForgotPasswordDialog(); // Show forgot password dialog
               },
-              child: Text(
+              child: const Text(
                 'Forgot Password?',
                 style: TextStyle(color: Colors.white),
               ),
