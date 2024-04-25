@@ -17,6 +17,20 @@ class _AuthenticateState extends State<Authenticate> {
     setState(() => showSignIn = !showSignIn);
   }
 
+    //don't know where to put this method.
+    /* Registers a new user with the provided email and password. */
+  Future<User?> registerWithEmailAndPassword(String email, String password) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User? user = result.user;
+      return user;
+    } catch (e) {
+      print('Error registering user: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     /* Display sign in view if showSignIn is true, otherwise display register view */

@@ -39,6 +39,61 @@ class _SignInState extends State<SignIn> {
       });
     }
   }
+  //method for show forgot Password
+  void _showForgotPasswordDialog() {
+    TextEditingController emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Forgot Password'),
+          content: TextField(
+            controller: emailController,
+            decoration: InputDecoration(
+              hintText: 'Enter your email',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String email = emailController.text.trim();
+                if (email.isNotEmpty) {
+                  // Call AuthService method to send password reset email
+                  bool result = await _auth.sendPasswordResetEmail(email);
+                  if (result) {
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text('Password reset email sent successfully!'),
+                      ),
+                    );
+                  } else {
+                    // Show error message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'Failed to send password reset email.'),
+                      ),
+                    );
+                  }
+                  Navigator.pop(context); // Close the dialog
+                }
+              },
+              child: Text('Reset Password'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +197,15 @@ class _SignInState extends State<SignIn> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                _showForgotPasswordDialog(); // Show forgot password dialog
+              },
+              child: Text(
+                'Forgot Password?',
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
